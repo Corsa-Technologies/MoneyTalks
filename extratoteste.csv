@@ -1,5 +1,5 @@
-Data,Descrição,Valor
-01/08/2025,Supermercado,100
-02/08/2025,Uber,200
-03/08/2025,Salário,300
-04/08/2025,Cinema,400
+Data,Descrição,Valor,Saldo
+01/08/2025,Supermercado,-25,1457
+02/08/2025,Uber,-18,1439
+03/08/2025,Salário,1500,2939
+04/08/2025,Cinema,-200,2739
