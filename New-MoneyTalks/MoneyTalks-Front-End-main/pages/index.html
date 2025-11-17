@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneyTalks</title>
+  <link rel="shortcut icon" href="../dinheiro.png" type="image/x-icon">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <script>
+    // Script "anti-flicker"
+    (function() {
+      const KEY = 'modo';
+      const LIGHT_CLASS = 'light-theme';
+      var currentModo = 0;
+      try {
+        // Tenta ler o modo salvo no localStorage
+        currentModo = Number(localStorage.getItem(KEY)) || 0;
+      } catch(e) { /* se falhar, usa 0 (dark) */ }
+      
+      // Aplica a classe na tag <html> ANTES de desenhar
+      // document.documentElement é a tag <html>
+      document.documentElement.classList.toggle(LIGHT_CLASS, currentModo === 1);
+    })();
+  </script>
+</head>
+<body>
+  <div class="div2"><h1>Páginas Educativas</h1></div>
+  
+  <div class="div7">
+    <div class="cards-container">
+      
+      <h2 class="tema-title">Tema 1</h2>
+      
+      <div class="cards-grid">
+        <a href="ed1.html" class="card-link">
+          <div class="card">
+            <div class="card-image card-image--contain"><img src="../img/CDI.png" alt="Topico 1"></div>
+            <div class="card-content"><p>Topico 1</p></div>
+          </div>
+        </a>
+        <a href="ed2.html" class="card-link">
+          <div class="card">
+            <div class="card-image"><img src="../img/placeholder2.png" alt="Topico 2"></div>
+            <div class="card-content"><p>Topico 2</p></div>
+          </div>
+        </a>
+        <a href="ed3.html" class="card-link">
+          <div class="card">
+            <div class="card-image"><img src="../img/placeholder3.png" alt="Topico 3"></div>
+            <div class="card-content"><p>Topico 3</p></div>
+          </div>
+          <a href="ed3.html" class="card-link">
+          <div class="card">
+            <div class="card-image"><img src="../img/placeholder3.png" alt="Topico 3"></div>
+            <div class="card-content"><p>Topico 3</p></div>
+          </div>
+        </a>
+      </div>
+
+      <h2 class="tema-title">Tema 2</h2>
+      
+      <div class="cards-grid">
+        <a href="ed4.html" class="card-link">
+          <div class="card">
+            <div class="card-image"><img src="../img/placeholder4.png" alt="Topico 1"></div>
+            <div class="card-content"><p>Topico 1</p></div>
+          </div>
+        </a>
+        <a href="ed5.html" class="card-link">
+          <div class="card">
+            <div class="card-image"><img src="../img/placeholder5.png" alt="Topico 2"></div>
+            <div class="card-content"><p>Topico 2</p></div>
+          </div>
+        </a>
+        <a href="ed6.html" class="card-link">
+          <div class="card">
+            <div class="card-image"><img src="../img/placeholder6.png" alt="Topico 3"></div>
+            <div class="card-content"><p>Topico 3</p></div>
+          </div>
+        </a>
+      </div>
+      
+    </div>
+  </div>
+    
+  <nav class="sidebar">
+    <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60" alt="Menu"></button></a>
+    <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35" alt="Config">Educação</button></a>
+    <a href="hub_calculadora.html" target="_self" rel="Next"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35" alt="Config">Calculadora</button></a>
+    <a href="cotações.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40" alt="Config">Cotações</button></a>
+  </nav>
+  
+  <nav class="sidebar2">    
+    <a href="sobre.html" target="_self" rel="Next"><img src="../img/info.png" width="40" height="50" alt="perfil"></a>
+  </nav>
+  
+  <button id="themeToggleButton" class="theme-switcher-button"></button>
+  
+  <script src="../JS/theme-switcher.js"></script>
+  <script src="../JS/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <script>
+    (function() {
+      const KEY = 'modo';
+      const LIGHT_CLASS = 'light-theme';
+      var currentModo = 0;
+      try {
+        currentModo = Number(localStorage.getItem(KEY)) || 0;
+      } catch(e) { }
+      document.documentElement.classList.toggle(LIGHT_CLASS, currentModo === 1);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneyTalks - Calculadora</title>
+  <link rel="shortcut icon" href="../dinheiro.png" type="image/x-icon">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="div2"><h1>Calculadora de Investimentos Online</h1></div>
+  
+  <div class="div7">
+
+    <div class="calculadora-wrapper">
+
+      <div class="form-container">
+        
+        <div class="calc-card">
+        
+          <div class="calc-row-full">
+            <div class="calc-col-6">
+              <label class="calc-title">Tipo de investimento <span class="info-icon">ⓘ</span></label>
+              <div class="calc-radio-group">
+                <label class="calc-radio">
+                  <input type="radio" name="investment_type" value="cdb" checked>
+                  <span>CDB/LC/Títulos públicos/Debêntêntures</span>
+                </label>
+                <label class="calc-radio">
+                  <input type="radio" name="investment_type" value="lca">
+                  <span>LCI/LCA</span>
+                </label>
+                <label class="calc-radio">
+                  <input type="radio" name="investment_type" value="treasury">
+                  <span>Tesouro</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="calc-col-6">
+              <label class="calc-title">É PRÉ fixado ou PÓS fixado? <span class="info-icon">ⓘ</span></label>
+              <div class="calc-radio-group">
+                <label class="calc-radio">
+                  <input type="radio" name="rate_type" value="pre" checked>
+                  <span>PRÉ</span>
+                </label>
+                <label class="calc-radio">
+                  <input type="radio" name="rate_type" value="pos">
+                  <span>PÓS</span>
+                </label>
+                <label class="calc-radio">
+                  <input type="radio" name="rate_type" value="ipca">
+                  <span>IPCA</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="calc-row-full">
+            <div class="calc-col-2">
+              <label class="calc-label">Investimento inicial</label>
+              <div class="calc-input-wrapper">
+                <span class="calc-prefix">R$</span>
+                <input type="number" id="initial_investment" placeholder="0,00" min="0" step="0.01">
+              </div>
+            </div>
+
+            <div class="calc-col-2">
+              <label class="calc-label">Investimento mensal</label>
+              <div class="calc-input-wrapper">
+                <span class="calc-prefix">R$</span>
+                <input type="number" id="monthly_investment" placeholder="0,00" min="0" step="0.01">
+              </div>
+            </div>
+          </div>
+
+          <div class="calc-row-full">
+            <div class="calc-col-2">
+              <label class="calc-label">Prazo</label>
+              <div class="calc-input-group">
+                <input type="number" id="term" placeholder="0" min="0" value="12">
+                <select id="term_unit">
+                  <option value="months">Meses</option>
+                  <option value="years">Anos</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="calc-col-2">
+              <label class="calc-label">Rentabilidade <span class="info-icon">ⓘ</span></label>
+              <div class="calc-input-group">
+                <span class="calc-prefix">%</span>
+                <input type="number" id="profitability" placeholder="0,00" min="0" step="0.01" value="10.50">
+                <select id="profitability_unit">
+                  <option value="year">Anual</option>
+                  <option value="month">Mensal</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div> <div class="how-to-card">
+          <h3>Como usar:</h3>
+          <ul>
+            <li>Selecione o tipo de investimento (CDB, LCI/LCA ou Tesouro)</li>
+            <li>Escolha se é PRÉ fixado, PÓS fixado ou IPCA+</li>
+            <li>Insira o valor inicial e aportes mensais (opcional)</li>
+            <li>Defina o prazo em anos ou meses</li>
+            <li>Informe a rentabilidade esperada (anual ou mensal)</li>
+            <li>Clique em "Calcular" para ver os resultados</li>
+          </ul>
+        </div>
+        </div> <div class="sidebar-container">
+
+        <div class="calc-button-container">
+          <button id="calc_button" class="calc-button-main">Calcular</button>
+        </div>
+
+        <div id="result" class="calc-result-card hidden">
+          <div class="result-row">
+            <span class="result-label">Valor investido:</span>
+            <span class="result-value" id="result_invested">R$ 0,00</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Rendimento:</span>
+            <span class="result-value" id="result_earnings">R$ 0,00</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Alíquota de IR:</span>
+            <span class="result-value" id="result_ir_rate">0.00%</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Imposto de Renda:</span>
+            <span class="result-value" id="result_ir">R$ 0,00</span>
+          </div>
+          <div class="result-row result-highlight">
+            <span class="result-label">Valor total líquido:</span>
+            <span class="result-value" id="result_total">R$ 0,00</span>
+          </div>
+        </div>
+
+      </div> </div> </div> <nav class="sidebar">
+    <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60" alt="Menu"></button></a>
+    <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35" alt="Config">Educação</button></a>
+    <a href="hub_calculadora.html" target="_self" rel="Next"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35" alt="Config">Calculadora</button></a>
+    <a href="cotações.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40" alt="Config">Cotações</button></a>
+  </nav>
+
+  <nav class="sidebar2">
+    <a href="sobre.html" target="_self" rel="Next"><img src="../img/info.png" width="40" height="50" alt="perfil"></a>
+  </nav>
+
+  <button id="themeToggleButton" class="theme-switcher-button"></button>
+
+  <script src="../JS/theme-switcher.js"></script>
+  <script src="../JS/main.js"></script>
+  <script src="../JS/calculator.js"></script>
+</body>
+</html>

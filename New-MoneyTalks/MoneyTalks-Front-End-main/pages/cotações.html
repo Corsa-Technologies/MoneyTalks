@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <script>
+    // Script "anti-flicker"
+    (function() {
+      const KEY = 'modo';
+      const LIGHT_CLASS = 'light-theme';
+      var currentModo = 0;
+      try {
+        // Tenta ler o modo salvo no localStorage
+        currentModo = Number(localStorage.getItem(KEY)) || 0;
+      } catch(e) { /* se falhar, usa 0 (dark) */ }
+      
+      // Aplica a classe na tag <html> ANTES de desenhar
+      // document.documentElement é a tag <html>
+      document.documentElement.classList.toggle(LIGHT_CLASS, currentModo === 1);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneyTalks</title>
+  <link rel="shortcut icon" href="../dinheiro.png" type="image/x-icon">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+<body>
+<div class="div2"><h1>Cotações Financeiras</h1></div>
+<div class="div7"><div class="div8_5"><div class="div8_5"><div>
+
+
+             <div class="div8"> <div class="div6"><div class="div4">  
+                
+                <h1>Converção</h1>
+                <div class="div20">
+          
+                  
+
+
+                       
+                            <input id="valor" name="valor" type="text" inputmode="decimal" placeholder="R$: 0,00" />
+                        
+                    
+
+                            <select id="moeda" name="moeda">
+                              <option value="BRL" selected>Real Brasileiro (BRL)</option>
+                              <option value="USD">Dólar Americano (USD)</option>
+                              <option value="EUR">Euro (EUR)</option>
+                              <option value="BTC">Bitcoin (BTC)</option>
+                              <option value="ETH">Ethereum (ETH)</option>
+                              <option value="XRP">XRP (XRP)</option>
+                            </select>
+                          
+                        <img src="../img/troca.png" alt="main" height="20px"
+                        width= "auto" >
+
+
+
+
+                                <input id="valor" name="valor" type="text" inputmode="decimal" placeholder="R$: 0,00" />
+                            
+                        
+    
+                                <select id="moeda" name="moeda">
+                                  <option value="BRL" selected>Real Brasileiro (BRL)</option>
+                                  <option value="USD">Dólar Americano (USD)</option>
+                                  <option value="EUR">Euro (EUR)</option>
+                                  <option value="BTC">Bitcoin (BTC)</option>
+                                  <option value="ETH">Ethereum (ETH)</option>
+                                  <option value="XRP">XRP (XRP)</option>
+                                </select>
+                    
+
+                    
+            </div>
+
+    
+    
+        
+    </div></div></div></div> 
+
+<div class="div2"><h1>Moedas</h1></div>
+<div class="div8"> <div class="div6"><div class="div4">  
+        
+    <h1>Dólar Americano (USD)</h1>
+    <h4>1 Dólar americano igual a</h4>
+    <h5>Insira API aqui</h5>
+    <h4>Insira data e horario aqui</h4>
+    
+</div></div></div>
+<div class="div8"> <div class="div6"><div class="div4">  
+        
+    <h1>Euro (EUR)</h1>
+    <h4>1 Euro igual a</h4>
+    <h5>Insira API aqui</h5>
+    <h4>Insira data e horario aqui</h4>
+
+</div></div></div>
+<div class="div8"> <div class="div6"><div class="div4">  
+        
+    <h1>Bitcoin (BTC)</h1>
+    <h4>1 Bitcoin igual a</h4>
+    <h5>Insira API aqui</h5>
+    <h4>Insira data e horario aqui</h4>
+    
+</div></div></div>
+<div class="div8"> <div class="div6"><div class="div4">  
+        
+    <h1>Ethereum (ETH)</h1>
+    <h4>1 Ethereum igual a</h4>
+    <h5>Insira API aqui</h5>
+    <h4>Insira data e horario aqui</h4>
+    
+</div></div></div>
+<div class="div8"> <div class="div6"><div class="div4">  
+        
+    <h1>XRP (XRP)
+    </h1>
+    <h4>1 XRP 
+      igual a</h4>
+    <h5>Insira API aqui</h5>
+    <h4>Insira data e horario aqui</h4>
+    
+</div></div></div>
+<nav class="sidebar">
+        <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60"alt="Menu" ></button></a>
+        <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35"alt="Config" >Educação</button></a>
+        <a href="hub_calculadora.html" target="_self" rel="Next"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35"alt="Config" >Calculadora</button></a>
+        <a href="cotações.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40"alt="Config" >Cotações</button></a>
+        
+        </nav>
+  
+    <nav class="sidebar2">    
+        <a href="sobre.html" target="_self" rel="Next"><img src="../img/info.png" width="40" height="50"alt="perfil"></a>
+    </nav>
+  
+    <button id="themeToggleButton" class="theme-switcher-button">
+      </button>
+  
+    <script src="../JS/theme-switcher.js"></script>
+    <script src="../JS/main.js"></script>
+    </body>
+</html>
