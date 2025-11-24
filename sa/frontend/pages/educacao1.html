@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Educação — MoneyTalks</title>
+  <link rel="shortcut icon" href="../dinheiro.png" type="image/x-icon">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: justify;
+    }
+
+    .article-content h2 {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      font-size: 2.1em;
+      border-bottom: 3px solid var(--accent-color, #4CAF50);
+      padding-bottom: 10px;
+    }
+
+    .article-content h3 {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+      color: var(--accent-color, #4CAF50);
+    }
+
+    .article-content p {
+      line-height: 1.8;
+      margin-bottom: 15px;
+      font-size: 1.15em;
+    }
+
+    .article-content ul {
+      max-width: 900px;
+      margin: 25px auto;
+      padding-left: 30px;
+      line-height: 1.8;
+    }
+
+    .article-content li {
+      margin-bottom: 12px;
+      font-size: 1.15em;
+      color: #fff;
+    }
+
+    .light-theme .article-content li {
+      color: #222;
+    }
+
+    /* deixa highlight-box branco no modo escuro */
+    .highlight-box {
+      background-color: rgba(76, 175, 80, 0.1);
+      border-left: 4px solid var(--accent-color, #4CAF50);
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 1000px;
+      border-radius: 5px;
+      font-size: 1.15em;
+      color: #fff;
+    }
+
+    .light-theme .highlight-box {
+      color: #222;
+    }
+
+    .article-content strong {
+      color: var(--accent-color, #4CAF50);
+    }
+
+    .article-content li strong {
+      color: var(--accent-color, #4CAF50);
+    }
+
+    .article-content li::marker {
+      color: var(--accent-color, #4CAF50);
+    }
+
+    .highlight-box {
+      background-color: rgba(76, 175, 80, 0.1);
+      border-left: 4px solid var(--accent-color, #4CAF50);
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 1000px;
+      border-radius: 5px;
+      font-size: 1.15em;
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 1.05em;
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(128, 128, 128, 0.3);
+      color: rgba(128, 128, 128, 0.8);
+    }
+  </style>
+  <script>
+    // Script "anti-flicker"
+    (function() {
+      const KEY = 'modo';
+      const LIGHT_CLASS = 'light-theme';
+      var currentModo = 0;
+      try {
+        currentModo = Number(localStorage.getItem(KEY)) || 0;
+      } catch(e) { /* se falhar, usa 0 (dark) */ }
+      document.documentElement.classList.toggle(LIGHT_CLASS, currentModo === 1);
+    })();
+  </script>
+</head>
+<body>
+  <div class="div2"><h1>O Que é o CDI e Como Ele Afeta o Seu Dinheiro?</h1></div>
+  
+  <div class="div7">
+    <div class="article-wrapper">
+      <article class="article-content">
+        <p>Se você já pesquisou sobre investimentos em Renda Fixa, como CDBs ou LCI, com certeza já se deparou com a sigla CDI. Mas você sabe exatamente o que ela significa e por que ela é a principal referência de rentabilidade no Brasil?</p>
+        
+        <p>Neste artigo, vamos desmistificar o CDI e explicar como ele funciona nos bastidores dos bancos.</p>
+
+        <h2>O Que Significa CDI?</h2>
+        <p>CDI é a sigla para <strong>Certificado de Depósito Interbancário</strong>.</p>
+        
+        <p>De forma simplificada, o CDI é um título emitido pelos bancos para que eles possam emprestar dinheiro uns aos outros. Sim, os bancos também pedem dinheiro emprestado!</p>
+
+        <h3>Por que os bancos emprestam dinheiro entre si?</h3>
+        <p>Existe uma regra do Banco Central que determina que todos os bancos devem encerrar o dia com o caixa positivo. Porém, ao longo do dia, é comum que um banco tenha mais saques do que depósitos, ficando com o saldo negativo momentaneamente.</p>
+        
+        <p>Para resolver isso, o banco que está "no vermelho" pega um empréstimo de curtíssimo prazo (geralmente de apenas 24 horas) com um banco que tem dinheiro sobrando. Essa transação é feita através do CDI.</p>
+
+        <h2>A Taxa DI: Onde Isso Afeta Você</h2>
+        <p>A mágica acontece aqui: os bancos cobram juros para emprestar esse dinheiro uns aos outros. A média das taxas de juros praticadas nessas transações entre bancos gera a <strong>Taxa DI</strong> (popularmente chamada apenas de "taxa CDI").</p>
+        
+        <p>Essa taxa média reflete o custo do dinheiro na economia e acompanha muito de perto a Taxa Selic (a taxa básica de juros da economia). Geralmente, o CDI rende aproximadamente 0,10 ponto percentual abaixo da Selic.</p>
+        
+        <div class="highlight-box">
+          <strong>Exemplo: .</strong>  Se a Selic está em 10,75% ao ano, o CDI provavelmente estará em torno de 10,65% ao ano.
+        </div>
+
+        <h2>O Que Significa "100% do CDI"?</h2>
+        <p>Como o CDI reflete a taxa básica de juros, o mercado financeiro adotou essa taxa como o principal índice de referência (benchmark) para investimentos de Renda Fixa.</p>
+        
+        <p>Quando você vê um investimento que paga "100% do CDI", isso significa que aquele investimento vai render exatamente a mesma taxa média que os bancos cobram entre si.</p>
+        
+        <p><strong>Veja como interpretar outras rentabilidades comuns:</strong></p>
+        <ul>
+          <li><strong>100% do CDI:</strong> Rende o valor integral da taxa (ótimo para reservas de emergência).</li>
+          <li><strong>110% do CDI:</strong> Rende 10% a mais que a taxa de referência (supera o CDI).</li>
+          <li><strong>90% do CDI:</strong> Rende 10% a menos que a taxa (comum em grandes bancos ou investimentos com liquidez imediata e isenção fiscal).</li>
+        </ul>
+
+        <h2>Por que o CDI é importante para o investidor?</h2>
+        <p>O CDI funciona como uma "régua" de desempenho. Qualquer investimento que tenha algum risco deve, idealmente, render mais do que 100% do CDI.</p>
+        
+        <p>Se um investimento arriscado rende menos que o CDI, geralmente não vale a pena, pois você poderia obter esse retorno com segurança em aplicações conservadoras.</p>
+
+        <h2>Resumo</h2>
+        <ul>
+          <li>CDI é o empréstimo entre bancos.</li>
+          <li>A Taxa DI é a média de juros desses empréstimos.</li>
+          <li>Ela acompanha a Selic.</li>
+          <li>É usada como meta de rentabilidade para seus investimentos.</li>
+        </ul>
+
+        <div class="disclaimer">
+          <em>Este artigo tem caráter educativo e não constitui recomendação de investimento.</em>
+        </div>
+      </article>
+    </div>
+  </div>
+  
+  <nav class="sidebar">
+    <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60" alt="Menu"></button></a>
+    <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35" alt="Config">Educação</button></a>
+    <a href="hub_calculadora.html" target="_self" rel="Next"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35" alt="Config">Calculadora</button></a>
+    <a href="cotações.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40" alt="Config">Cotações</button></a>
+  </nav>
+  
+  <nav class="sidebar2">    
+    <a href="sobre.html" target="_self" rel="Next"><img src="../img/info.png" width="40" height="50" alt="perfil"></a>
+  </nav>
+
+  <button id="themeToggleButton" class="theme-switcher-button"></button>
+
+  <script src="../JS/theme-switcher.js"></script>
+  <script src="../JS/main.js"></script>
+</body>
+</html>
