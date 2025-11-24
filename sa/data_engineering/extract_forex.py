@@ -107,14 +107,14 @@ class Process_forex:
 
             last_price = float(rates[symbol])
 
-            # json enviado ao Supabase
+            # json enviado ao Supabase (histórico)
             payload = {
                 "valor": last_price,
                 "data": datetime.utcnow().isoformat(),
                 "id_forex": id_forex
             }
 
-            # insere registro no Supabase
+            # insere registro no Supabase (histórico)
             insert_response = requests.post(
                 f"{self.supabase_url}/historico_forex",
                 headers=headers,
@@ -125,4 +125,42 @@ class Process_forex:
                 print(f"Erro ao inserir cotação ({symbol}): {insert_response.text}")
             else:
                 print(f"✔ Inserido {symbol}: {last_price}")
+
+            # --- novo: upsert para tabela cotacoes_atuais ---
+            codigo = symbol  # para forex, símbolo já é algo como "BRL","EUR"
+
+            upsert_headers = headers.copy()
+            upsert_headers["Prefer"] = "resolution=merge-duplicates"
+
+            upsert_payload = {
+                "id_forex": id_forex,
+                "simbolo": symbol,
+                "codigo": codigo,
+                "valor": last_price,
+                "data": datetime.utcnow().isoformat()
+            }
+
+            upsert_response = requests.post(
+                f"{self.supabase_url}/cotacoes_atuais",
+                headers=upsert_headers,
+                json=upsert_payload
+            )
+
+            if upsert_response.status_code not in [200, 201]:
+                print(f"Erro ao upsert cotação atual ({symbol}): {upsert_response.status_code} {upsert_response.text}")
+            else:
+                print(f"✔ Upserted {symbol} na tabela cotacoes_atuais.")
+
+# --- exemplo de uso ---
+if __name__ == "__main__":
+    # Observação: a tabela 'forex' tem colunas: id, nome, país
+    # Aqui o método get_forex() atualmente retorna item["nome"].
+    # Garanta que 'nome' contenha o código da moeda (ex: "BRL", "EUR") para que a extração funcione corretamente.
+    process = Process_forex()
+    try:
+        forexes = process.get_forex()  # retorna { id: "BRL", ... } — depende do conteúdo de 'nome'
+        process.extract_forex(forexes)
+        print("Extração de forex finalizada.")
+    except Exception as e:
+        print("Erro na execução:", e)
 

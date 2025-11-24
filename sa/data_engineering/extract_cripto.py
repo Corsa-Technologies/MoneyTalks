@@ -79,7 +79,7 @@ class Process_cripto:
                 # Extrai o último preço
                 last_price = float(data["data"][0]["last"])
 
-                # JSON enviado ao Supabase
+                # JSON enviado ao Supabase (histórico)
                 payload = {
                     "valor": last_price,
                     "data": datetime.utcnow().isoformat(),
@@ -95,7 +95,45 @@ class Process_cripto:
                 if insert_response.status_code not in [200, 201]:
                     print(f"Erro ao inserir cotação ({symbol}): {insert_response.text}")
 
+                # --- novo: upsert para tabela cotacoes_atuais (mantém a cotação atual) ---
+                # normaliza um código curto (ex: "BTC" a partir de "BTC-USDT")
+                codigo = symbol.split('-')[0] if isinstance(symbol, str) and '-' in symbol else symbol
+
+                upsert_headers = headers.copy()
+                # usa merge-duplicates para fazer upsert (requer constraint/PK em cotacoes_atuais)
+                upsert_headers["Prefer"] = "resolution=merge-duplicates"
+
+                upsert_payload = {
+                    "id_cripto": id_cripto,
+                    "simbolo": symbol,
+                    "codigo": codigo,
+                    "valor": last_price,
+                    "data": datetime.utcnow().isoformat()
+                }
+
+                upsert_response = requests.post(
+                    f"{self.supabase_url}/cotacoes_atuais",
+                    headers=upsert_headers,
+                    json=upsert_payload
+                )
+
+                if upsert_response.status_code not in [200, 201]:
+                    print(f"Erro ao upsert cotação atual ({symbol}): {upsert_response.status_code} {upsert_response.text}")
+
             else:
                 print(f"Erro {response.status_code}: {response.text}")
 
         return True
+
+# --- exemplo de uso (linha ~51-59 que você mencionou) ---
+if __name__ == "__main__":
+    # Exemplo de execução:
+    #  - A tabela 'criptomoedas' deve conter as colunas: id, nome, simbolo
+    #  - O campo 'simbolo' deve armazenar o instId esperado pela OKX (ex: "BTC-USDT", "ETH-USDT")
+    process = Process_cripto()
+    try:
+        criptos = process.get_criptos()  # retorna { id: "BTC-USDT", ... }
+        process.extract_cripto(criptos)
+        print("Extração de cripto finalizada.")
+    except Exception as e:
+        print("Erro na execução:", e)
