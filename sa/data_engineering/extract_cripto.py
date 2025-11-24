@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime
 
-class Extract_data:
+class Process_cripto:
     """
     Classe responsável por:
       - Consultar lista de criptomoedas armazenadas no Supabase.
@@ -20,7 +20,7 @@ class Extract_data:
         self.base_url = "https://www.okx.com/api/v5/market/ticker"
         self.supabase_url = "https://pltknfhvlcnfcblxcrro.supabase.co/rest/v1"
         self.supabase_key = (
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsdGtuZmh2bGNuZmNibHhjcnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMjUyMDUsImV4cCI6MjA3MzkwMTIwNX0.MOk0uUxA6ik8-j4BemDIsq63LCZUHqufoOe_oD-QZsE"
         )
 
     def get_criptos(self):
@@ -87,7 +87,7 @@ class Extract_data:
                 }
 
                 insert_response = requests.post(
-                    f"{self.supabase_url}/cotacoes",
+                    f"{self.supabase_url}/historico_criptos",
                     headers=headers,
                     json=payload
                 )

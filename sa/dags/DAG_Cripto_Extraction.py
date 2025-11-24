@@ -1,25 +1,25 @@
 from airflow import DAG
 from airflow.decorators import task
-from data_engineering.extract_cripto import Extract_data
+from data_engineering.extract_cripto import Process_cripto
 from pandas import DataFrame
 from datetime import datetime, timedelta
 
 # ------------------------------------------------------------------------------
-# DAG: etl_currency
+# DAG: etl_cripto
 # Executa mensalmente um fluxo ETL para buscar criptomoedas no Supabase,
 # consultar seus preços atuais via API e armazenar um histórico de cotações.
 # ------------------------------------------------------------------------------
 
 with DAG(
-    dag_id='etl_currency',
+    dag_id='etl_cripto',
     start_date=datetime(2025, 11, 9),
-    schedule='@monthly',  # Executa uma vez por mês
+    schedule='*/5 * * * *',  # Executa uma vez por mês
     catchup=False,
     tags=["crypto", "etl"]
 ) as dag:
     
     # Instância da classe responsável por buscar e inserir dados
-    extractor = Extract_data()
+    extractor = Process_cripto()
 
     @task
     def get_cripto():

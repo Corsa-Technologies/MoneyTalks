@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import requests
 from datetime import datetime
 
-class Process_data:
+class Process_forex:
     """
     Classe responsável por:
       - Buscar a lista de moedas (forex) no Supabase.
@@ -21,10 +21,10 @@ class Process_data:
         self.base_url = "https://www.okx.com/api/v5/market/ticker"
         self.supabase_url = "https://pltknfhvlcnfcblxcrro.supabase.co/rest/v1"
         self.supabase_key = (
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsdGtuZmh2bGNuZmNibHhjcnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMjUyMDUsImV4cCI6MjA3MzkwMTIwNX0.MOk0uUxA6ik8-j4BemDIsq63LCZUHqufoOe_oD-QZsE"
         )
 
-    def get_criptos(self):
+    def get_forex(self):
         """
         Busca a lista cadastrada de forex no Supabase.
 
@@ -48,7 +48,7 @@ class Process_data:
         else:
             raise Exception(f"Erro ao buscar forex: {response.text}")
 
-    def scrape_forex(self, forexes):
+    def extract_forex(self, forexes):
         """
         Consulta a API ForexRateAPI e grava os valores no Supabase.
 
@@ -126,16 +126,3 @@ class Process_data:
             else:
                 print(f"✔ Inserido {symbol}: {last_price}")
 
-
-if __name__ == "__main__":
-    """
-    Execução principal:
-      - cria instância da classe
-      - busca lista de moedas no Supabase
-      - coleta preços e salva no banco
-    """
-    processo = Process_data()
-    
-    forexes = processo.get_criptos()
-    processo.scrape_forex(forexes)
-    print(forexes)
