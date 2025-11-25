@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <script>(()=>{try{document.documentElement.classList.toggle('light-theme',+localStorage.getItem('modo')===1)}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoneyTalks</title>
   <link rel="shortcut icon" href="../dinheiro.png" type="image/x-icon">
-  <link id="themeLink" rel="stylesheet" href="css/style.css">
+    <link id="themeLink" rel="stylesheet" href="../css/style.css">
 
 </head>
 <body>
@@ -45,13 +46,10 @@
 <!-------------------------------------------------------------------------------------------------------------------------------------------------> 
     <!--Nav Bar-->
     <nav class="sidebar">
-        <a href="../Index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60"alt="Menu" ></button></a>
-        <a href="hub_educação.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35"alt="Config" >Educação</button></a>
-        <a href="hub_calculadora.html" target="_self" rel="Next"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35"alt="Config" >Calculadora</button></a>
-        <a href="cotações.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40"alt="Config" >Cotações</button></a>
-        <a href="config.html" target="_self" rel="Next"><button class="button_3"><img src="../img/config.png" width="39" height="35"alt="Config" >Config</button></a>
-        
-        <!-- outros itens da sidebar -->
+        <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60" alt="Menu"></button></a>
+        <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35" alt="Config">Educação</button></a>
+        <a href="hub_calculadora.html" target="_self" rel="Next"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35" alt="Config">Calculadora</button></a>
+        <a href="cotações.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40" alt="Config">Cotações</button></a>
     </nav>
   
     <!--Botao Sobre -->
@@ -59,6 +57,7 @@
         <a href="sobre.html" target="_self" rel="Next"><img src="../img/info.png" width="40" height="50"alt="perfil"></a>
     </nav>
   
+    <button id="themeToggleButton" class="theme-switcher-button"></button>
     <script src="../JS/theme-switcher.js"></script>
     <script src="../JS/main.js"></script>
 <!-------------------------------------------------------------------------------------------->  

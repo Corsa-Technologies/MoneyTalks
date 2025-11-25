@@ -1,37 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <script>
-    (function() {
-      const KEY = 'modo';
-      const LIGHT_CLASS = 'light-theme';
-      var currentModo = 0;
-      try {
-        currentModo = Number(localStorage.getItem(KEY)) || 0;
-      } catch(e) { }
-      document.documentElement.classList.toggle(LIGHT_CLASS, currentModo === 1);
-    })();
-  </script>
+  <script>(()=>{try{document.documentElement.classList.toggle('light-theme',+localStorage.getItem('modo')===1)}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoneyTalks - Calculadora</title>
   <link rel="shortcut icon" href="../dinheiro.png" type="image/x-icon">
   <link rel="stylesheet" href="../css/style.css">
-  <style>
-    html {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-  </style>
+  <!-- Styles moved to global stylesheet to preserve sidebar spacing -->
 </head>
 <body>
   <div class="div2"><h1>Calculadora de Investimentos Online</h1></div>

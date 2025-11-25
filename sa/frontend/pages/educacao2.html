@@ -119,18 +119,7 @@
       color: rgba(128, 128, 128, 0.8);
     }
   </style>
-  <script>
-    // Script "anti-flicker"
-    (function() {
-      const KEY = 'modo';
-      const LIGHT_CLASS = 'light-theme';
-      var currentModo = 0;
-      try {
-        currentModo = Number(localStorage.getItem(KEY)) || 0;
-      } catch(e) { /* se falhar, usa 0 (dark) */ }
-      document.documentElement.classList.toggle(LIGHT_CLASS, currentModo === 1);
-    })();
-  </script>
+  <script>(()=>{try{document.documentElement.classList.toggle('light-theme',+localStorage.getItem('modo')===1)}catch(e){}})();</script>
 </head>
 <body>
   <div class="div2"><h1>LCI: O Investimento Isento de Imposto de Renda</h1></div>

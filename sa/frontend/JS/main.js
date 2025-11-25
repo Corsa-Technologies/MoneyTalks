@@ -1,93 +1,99 @@
-let nome = "Pedro Henrique de Souza"; //Atualizar puxando o nome do banco de dados
-document.getElementById("name").innerHTML = nome;
+// Valores de exemplo (substituir por dados reais do backend quando existirem)
+const nome = "Pedro Henrique de Souza";
+const sald = 1500.75;
 
-let sald = 1500.75; //Atualizar puxando o saldo do banco de dados
-document.getElementById("saldo").textContent = `R$: ${sald}`;
+// Define texto apenas se o elemento existir
+const nameEl = document.getElementById("name");
+if (nameEl) nameEl.textContent = nome;
+
+const saldoEl = document.getElementById("saldo");
+if (saldoEl) saldoEl.textContent = `R$: ${sald}`;
 
 
 //Sistema de nome do arquivo e enviado------------------------------------------
 const fileInput = document.getElementById('doc');
-  const fileNameDisplay = document.getElementById('fileNameDisplay');
+const fileNameDisplay = document.getElementById('fileNameDisplay');
 
+if (fileInput && fileNameDisplay) {
   fileInput.addEventListener('change', () => {
-    if (fileInput.files.length > 0) {
-      fileNameDisplay.textContent = `${fileInput.files[0].name}`;} 
-      else {
-      fileNameDisplay.textContent = 'Nenhum arquivo selecionado';}
-      });
+    if (fileInput.files && fileInput.files.length > 0) {
+      fileNameDisplay.textContent = `${fileInput.files[0].name}`;
+    } else {
+      fileNameDisplay.textContent = 'Nenhum arquivo selecionado';
+    }
+  });
+}
 //---------------------------------------------------------------------------------
 
 
 function toggleSecao() {
   const secao = document.getElementById("minhaSecao");
-  if (secao.style.display === "none") {
-    secao.style.display = "block";
-  } else {
-    secao.style.display = "none";
-  }
+  if (!secao) return;
+  const isHidden = secao.style.display === "none" || getComputedStyle(secao).display === "none";
+  secao.style.display = isHidden ? "block" : "none";
 }
 
 
 
 
-    document.querySelectorAll('.btn-excluir').forEach(button => {
+document.querySelectorAll('.btn-excluir').forEach(button => {
   button.addEventListener('click', function () {
     const item = this.closest('.div9');
     if (!item) return;
-    // confirmação simples
     if (!confirm('Deseja excluir este item?')) return;
-    // remove do DOM
     item.remove();
   });
 });
 // Fim do código de exclusão de itens do histórico ------------------------------
 //Grafico em Pizza---------------------------------------------------------------
-    let grafico; // variável global para armazenar o gráfico
+let pizzaChart = null; // gráfico de pizza
 
-    function mostrarGrafico() {
-      const ctx = document.getElementById('meuGrafico').getContext('2d');
+function mostrarGraficoPizza() {
+  const canvas = document.getElementById('meuGrafico');
+  if (!canvas || typeof Chart === 'undefined') return;
+  const ctx = canvas.getContext('2d');
 
-      // Se já existir um gráfico, destrói antes de criar outro
-      if (grafico) {
-        grafico.destroy();
-      }
+  if (pizzaChart) {
+    pizzaChart.destroy();
+    pizzaChart = null;
+  }
 
-      grafico = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: ['Vermelho', 'Azul', 'Amarelo', 'Verde', 'Roxo'],
-          datasets: [{
-            data: [12, 19, 3, 5, 2],// da pra usar variaveis aqui
-            backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple']
-          }]
-        },
-        options: {
-          responsive: false
-        }
-      });
+  pizzaChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Vermelho', 'Azul', 'Amarelo', 'Verde', 'Roxo'],
+      datasets: [{
+        data: [12, 19, 3, 5, 2],
+        backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple']
+      }]
+    },
+    options: {
+      responsive: false
     }
+  });
+}
 // Fim do código do gráfico em pizza------------------------------------------------
 //grafico em barras---------------------------------------------------------------
-let graficoBarra;
+let barraChart = null;
 const btnBarra = document.getElementById('btnBarra');
 
-btnBarra.addEventListener('click', () => {
-  const ctx = document.getElementById('graficoBarra').getContext('2d');
+function criarOuDestruirBarra() {
+  const canvas = document.getElementById('graficoBarra');
+  if (!canvas || typeof Chart === 'undefined') return;
+  const ctx = canvas.getContext('2d');
 
-  if (graficoBarra) {
-    // Se já existe, destrói e desativa o botão
-    graficoBarra.destroy();
-    graficoBarra = null;
-    btnBarra.classList.remove('ativo');
+  if (barraChart) {
+    barraChart.destroy();
+    barraChart = null;
+    if (btnBarra) btnBarra.classList.remove('ativo');
   } else {
-    // Cria o gráfico em barra
-    graficoBarra = new Chart(ctx, {
+    barraChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
         datasets: [{
           label: 'Vendas',
-          data: [12, 19, 3, 5, 2], // aqui você pode usar variáveis
+          data: [12, 19, 3, 5, 2],
           backgroundColor: [
             'rgba(255, 99, 132, 0.7)',
             'rgba(54, 162, 235, 0.7)',
@@ -108,15 +114,15 @@ btnBarra.addEventListener('click', () => {
       options: {
         responsive: false,
         scales: {
-          y: {
-            beginAtZero: true
-          }
+          y: { beginAtZero: true }
         }
       }
     });
-    btnBarra.classList.add('ativo');
+    if (btnBarra) btnBarra.classList.add('ativo');
   }
-});
+}
+
+if (btnBarra) btnBarra.addEventListener('click', criarOuDestruirBarra);
 // Fim do código do gráfico em barras------------------------------------------------
 
 // references aos canvases
@@ -127,31 +133,28 @@ const pizzaCanvas = document.getElementById('meuGrafico');
 // função genérica para mostrar um canvas por ID
 function mostrarCanvas(idAtivo) {
   [barraCanvas, pizzaCanvas].forEach(c => {
+    if (!c) return;
     if (c.id === idAtivo) c.classList.add('active');
     else c.classList.remove('active');
   });
 
-  // força o Chart.js a redimensionar e redesenhar corretamente
-  if (typeof barraChart !== 'undefined' && idAtivo === 'graficoBarra') barraChart.resize();
-  if (typeof pizzaChart !== 'undefined' && idAtivo === 'meuGrafico') pizzaChart.resize();
+  // força o Chart.js a redimensionar corretamente
+  if (barraChart && idAtivo === 'graficoBarra') barraChart.resize();
+  if (pizzaChart && idAtivo === 'meuGrafico') pizzaChart.resize();
 
-    // destaca o botão correto e remove destaque dos outros
+  // destaca o botão correto
   if (idAtivo === 'graficoBarra') {
-    btnBarra.classList.add('active');
-    btnPizza.classList.remove('active');
+    if (btnBarra) btnBarra.classList.add('active');
+    if (btnPizza) btnPizza.classList.remove('active');
   } else if (idAtivo === 'meuGrafico') {
-    btnPizza.classList.add('active');
-    btnBarra.classList.remove('active');
+    if (btnPizza) btnPizza.classList.add('active');
+    if (btnBarra) btnBarra.classList.remove('active');
   }
-
-
 }
 
 // conecta os botões
-document.getElementById('btnBarra').addEventListener('click', () => mostrarCanvas('graficoBarra'));
-
-const btnPizza = document.getElementById('btnPizza'); // certifique-se de ter id="btnPizza" no HTML
-if (btnPizza) btnPizza.addEventListener('click', () => mostrarCanvas('meuGrafico'));
+const btnPizza = document.getElementById('btnPizza');
+if (btnPizza) btnPizza.addEventListener('click', () => { mostrarCanvas('meuGrafico'); mostrarGraficoPizza(); });
 
 
 
