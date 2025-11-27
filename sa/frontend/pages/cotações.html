@@ -1,602 +1,443 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <script>
-    // Script "anti-flicker"
-    (function() {
-      const KEY = 'modo';
-      const LIGHT_CLASS = 'light-theme';
-      var currentModo = 0;
-      try {
-        // Tenta ler o modo salvo no localStorage
-        currentModo = Number(localStorage.getItem(KEY)) || 0;
-      } catch(e) { /* se falhar, usa 0 (dark) */ }
-      
-      // Aplica a classe na tag <html> ANTES de desenhar
-      // document.documentElement é a tag <html>
-      document.documentElement.classList.toggle(LIGHT_CLASS, currentModo === 1);
-    })();
-  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoneyTalks</title>
   <link rel="shortcut icon" href="../dinheiro.png" type="image/x-icon">
   <link rel="stylesheet" href="../css/style.css">
 
-  <!-- adiciona estilos rápidos para organizar os cards em 2 linhas de 3 -->
+  <script>
+    (function() {
+      const KEY = 'modo';
+      const LIGHT_CLASS = 'light-theme';
+      var currentModo = 0;
+      try {
+        currentModo = Number(localStorage.getItem(KEY)) || 0;
+      } catch(e) {}
+      document.documentElement.classList.toggle(LIGHT_CLASS, currentModo === 1);
+    })();
+  </script>
+
   <style>
-    /* container de linha com 3 colunas */
+    /* === CORREÇÃO CRÍTICA DE LAYOUT === */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body {
+      overflow-y: auto;
+      padding-bottom: 40px;
+      
+      /* --- AQUI ESTÁ A MÁGICA --- */
+      /* Empurramos o conteúdo 90px para a direita para não bater no menu */
+      padding-left: 90px; 
+      /* Garante que o padding faz parte do cálculo da largura total */
+      box-sizing: border-box; 
+    }
+
+    /* Títulos Responsivos */
+    .div2 h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      margin: 15px 0;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    #relevant_title {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    /* === ÁREA DE CONVERSÃO === */
+    .converter-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 20px 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .converter-input {
+      width: 120px;
+      padding: 10px !important;
+      text-align: center;
+      font-weight: bold;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      height: 42px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+
+    .converter-select {
+      width: 140px;
+      padding: 5px 10px !important;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      height: 42px;
+      box-sizing: border-box;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .exchange-icon {
+      margin: 0 10px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+
+    /* Responsividade do Conversor */
+    @media (max-width: 900px) {
+      .converter-row {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .exchange-icon {
+        transform: rotate(90deg);
+        margin: 5px 0;
+      }
+      .input-group {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 400px) {
+        .converter-input { width: 90px; }
+        .converter-select { width: 110px; }
+    }
+
+    /* === GRID DOS CARDS INTELIGENTE === */
     .cards-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin: 12px 8px;
-      align-items: start;
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 20px;
+      padding: 0 20px;
+      max-width: 1200px;
+      margin: 0 auto 20px auto;
     }
 
-    /* garante que os cartões existentes (que usam .div8) se comportem bem dentro do grid */
-    .cards-row > .div8 {
-      margin: 0; /* remove margens externas que possam quebrar o grid */
-    }
-
-    /* responsivo: em telas pequenas empilha em 1 coluna */
-    @media (max-width: 720px) {
+    /* Responsividade dos Cards */
+    @media (max-width: 1024px) {
       .cards-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr); 
       }
     }
 
-    /* título principal "Cotações Financeiras" */
-    .div2 h1 {
-      font-size: 2.8rem;
-      font-weight: 700;
-      margin-top: 4px;
-      margin-bottom: 4px;
-      line-height: 0.1;
+    @media (max-width: 650px) {
+      .cards-row {
+        grid-template-columns: 1fr;
+      }
+      /* No celular, o menu costuma mudar ou sumir, então removemos o padding lateral */
+      body {
+        padding-left: 0;
+      }
     }
 
-    /* aumenta fonte e espaçamento do título "Moedas Relevantes" */
-    #relevant_title {
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-top: 8px;
-      margin-bottom: 1px;
-      line-height: 0.8;
+    /* Estilos internos dos cards */
+    .div4 h1 {
+      font-size: 1.3rem !important;
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
     }
+    .div4 h4 { font-size: 0.85rem; margin: 5px 0; opacity: 0.8; }
+    .div4 h5 { font-size: 1.5rem; font-weight: bold; margin: 5px 0; }
 
-    /* responsivo: reduz um pouco em telas pequenas */
-    @media (max-width: 720px) {
-      #relevant_title { font-size: 1.6rem; margin-top: 8px; }
-    }
-
-    html {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* remove espaçamento extra do body */
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    /* reduz apenas margin-bottom dos wrappers */
-    .div7 {
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .div8_5 {
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    /* garante que o último cards-row não tenha margem inferior excessiva */
-    .cards-row:last-of-type {
-      margin-bottom: 0;
-    }
-
-    /* Estilos para a área de conversão - aumentos moderados */
-    .div20 {
-      padding: 16px 12px;
-    }
-
-    .div20 input {
-      padding: 8px 10px;
-      min-width: 100px;
-      font-size: 15px;
-      text-align: center;
-    }
-
-    .div20 select {
-      padding: 8px 10px;
-      min-width: 150px;
-      font-size: 14px;
-    }
-
-    /* Aumenta tamanho e centraliza o texto dos inputs */
-    #valor {
-      font-size: 18px !important;
-      font-weight: 600;
-      text-align: center;
-      padding: 12px 10px !important;
-      min-height: 40px;
-      max-width: 110px;
-    }
   </style>
-
 </head>
 <body>
-<div class="div2"><h1>Cotações Financeiras</h1></div>
-<div class="div7"><div class="div8_5"><div class="div8_5"><div>
 
+<div class="div2">
+  <h1>Cotações Financeiras</h1>
+</div>
 
-             <div class="div8"> <div class="div6"><div class="div4">  
-                
-                <h1>Conversão</h1>
-                <div class="div20">
+<div class="div7">
+  <div class="div8_5">
+    <div class="div8">
+      <div class="div6">
+        <div class="div4">
+          <h1 style="text-align: center; margin-bottom: 5px;">Conversão</h1>
           
-                  
-
-
-                       
-                            <input id="valor" name="valor" type="text" inputmode="decimal" placeholder="0,00" />
-                        
-                    
-
-                            <select id="moeda" name="moeda">
-                              <option value="BRL" selected>Real Brasileiro (BRL)</option>
-                              <option value="USD">Dólar Americano (USD)</option>
-                              <option value="EUR">Euro (EUR)</option>
-                              <option value="JPY">Iêne Japonês (JPY)</option>
-                              <option value="BTC">Bitcoin (BTC)</option>
-                              <option value="ETH">Ethereum (ETH)</option>
-                              <option value="XRP">XRP (Ripple)</option>
-                            </select>
-                          
-                        <img src="../img/troca.png" alt="main" height="20px"
-                        width= "auto" >
-
-
-
-
-                                <input id="valor" name="valor" type="text" inputmode="decimal" placeholder="0,00" />
-                            
-                        
-    
-                                <select id="moeda" name="moeda">
-                                  <option value="BRL" selected>Real Brasileiro (BRL)</option>
-                                  <option value="USD">Dólar Americano (USD)</option>
-                                  <option value="EUR">Euro (EUR)</option>
-                                  <option value="JPY">Iêne Japonês (JPY)</option>
-                                  <option value="BTC">Bitcoin (BTC)</option>
-                                  <option value="ETH">Ethereum (ETH)</option>
-                                  <option value="XRP">XRP (Ripple)</option>
-                                </select>
-                    
-
-                    
+          <div class="converter-row">
+            <div class="input-group">
+              <input id="valor" class="converter-input" type="text" inputmode="decimal" placeholder="0,00" />
+              <select id="moeda" class="converter-select">
+                <option value="BRL" selected>Real (BRL)</option>
+                <option value="USD">Dólar (USD)</option>
+                <option value="EUR">Euro (EUR)</option>
+                <option value="JPY">Iêne (JPY)</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="XRP">XRP (Ripple)</option>
+              </select>
             </div>
 
-    
-    
-        
-    </div></div></div></div> 
+            <img src="../img/troca.png" alt="trocar" height="22px" width="auto" class="exchange-icon">
 
-<div class="div2"><h1 id="relevant_title">Moedas Relevantes</h1></div>
+            <div class="input-group">
+              <input id="valor" class="converter-input" type="text" inputmode="decimal" placeholder="0,00" />
+              <select id="moeda" class="converter-select">
+                <option value="BRL">Real (BRL)</option>
+                <option value="USD" selected>Dólar (USD)</option>
+                <option value="EUR">Euro (EUR)</option>
+                <option value="JPY">Iêne (JPY)</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="XRP">XRP (Ripple)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!-- linha de cima: 3 cards forex (BRL, USD, EUR) -->
+<div class="div2">
+  <h1 id="relevant_title">Moedas Relevantes</h1>
+</div>
+
 <div class="cards-row" id="forex-row">
-
-
-  <!-- USD -->
-  <div class="div8"> <div class="div6"><div class="div4">
-     <h1>
-    <img src="https://flagcdn.com/w80/us.png" 
-         alt="Bandeira EUA" 
-         style="width: 50px; vertical-align: middle; margin-right: 10px;">
-    Dólar Americano (USD)
-
+  <div class="div8"><div class="div6"><div class="div4">
+    <h1><img src="https://flagcdn.com/w80/us.png" alt="EUA" style="width: 40px; margin-right: 10px;">Dólar (USD)</h1>
     <h4>1 Dólar americano igual a</h4>
     <h5 id="USD_value">Carregando...</h5>
     <h4 id="USD_time"></h4>
   </div></div></div>
 
-  <!-- EUR -->
-  <div class="div8"> <div class="div6"><div class="div4">
-   </h1>
-    <h1>
-    <img src="https://flagcdn.com/w80/eu.png" 
-         alt="Bandeira União Europeia" 
-         style="width: 50px; vertical-align: middle; margin-right: 10px;">
-    Euro (EUR)
-</h1>
+  <div class="div8"><div class="div6"><div class="div4">
+    <h1><img src="https://flagcdn.com/w80/eu.png" alt="EU" style="width: 40px; margin-right: 10px;">Euro (EUR)</h1>
     <h4>1 Euro igual a</h4>
     <h5 id="EUR_value">Carregando...</h5>
     <h4 id="EUR_time"></h4>
-
   </div></div></div>
-  <div class="div8"> <div class="div6"><div class="div4">
-    
-   <h1>
-    <img src="https://flagcdn.com/w80/jp.png" 
-         alt="Bandeira Japão" 
-         style="width: 50px; vertical-align: middle; margin-right: 10px;">
-    Iêne Japonês (JPY)
-</h1>
+
+  <div class="div8"><div class="div6"><div class="div4">
+    <h1><img src="https://flagcdn.com/w80/jp.png" alt="JP" style="width: 40px; margin-right: 10px;">Iêne (JPY)</h1>
     <h4>1 Iêne igual a</h4>
     <h5 id="JPY_value">Carregando...</h5>
     <h4 id="JPY_time"></h4>
   </div></div></div>
 </div>
 
-
-<!-- linha de baixo: 3 cards cripto (BTC, ETH, XRP) -->
 <div class="cards-row" id="crypto-row">
-  <div class="div8"> <div class="div6"><div class="div4">
-   <h1>
-    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" 
-         alt="Logo Bitcoin" 
-         style="width: 50px; vertical-align: middle; margin-right: 10px;">
-    Bitcoin (BTC)
-</h1>
+  <div class="div8"><div class="div6"><div class="div4">
+    <h1><img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="BTC" style="width: 40px; margin-right: 10px;">Bitcoin (BTC)</h1>
     <h4>1 Bitcoin igual a</h4>
     <h5 id="BTC_value">Carregando...</h5>
     <h4 id="BTC_time"></h4>
   </div></div></div>
 
-  <div class="div8"> <div class="div6"><div class="div4">
-  <h1>
-    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" 
-         alt="Logo Ethereum" 
-         style="width: 45px; vertical-align: middle; margin-right: 10px; background-color: white; border-radius: 50%; padding: 6px;">
-    Ethereum (ETH)
-</h1>
+  <div class="div8"><div class="div6"><div class="div4">
+    <h1><img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" alt="ETH" style="width: 40px; margin-right: 10px; background:#eee; border-radius:50%; padding:2px;">Ethereum (ETH)</h1>
     <h4>1 Ethereum igual a</h4>
     <h5 id="ETH_value">Carregando...</h5>
     <h4 id="ETH_time"></h4>
   </div></div></div>
 
-  <div class="div8"> <div class="div6"><div class="div4">
-    <h1>
-    <img src="https://cryptologos.cc/logos/xrp-xrp-logo.png" 
-         alt="Logo XRP" 
-         style="width: 48px; vertical-align: middle; margin-right: 10px; background-color: white; border-radius: 50%; padding: 2px; filter: invert(100%);">
-    XRP (Ripple)
-</h1>
+  <div class="div8"><div class="div6"><div class="div4">
+    <h1><img src="https://cryptologos.cc/logos/xrp-xrp-logo.png" alt="XRP" style="width: 40px; margin-right: 10px; background:#eee; border-radius:50%; padding:2px;">XRP (Ripple)</h1>
     <h4>1 XRP igual a</h4>
     <h5 id="XRP_value">Carregando...</h5>
     <h4 id="XRP_time"></h4>
   </div></div></div>
 </div>
 
-</div></div></div>
-
 <nav class="sidebar">
-        <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60"alt="Menu" ></button></a>
-        <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35"alt="Config" >Educação</button></a>
-        <a href="hub_calculadora.html" target="_self" rel="Next"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35"alt="Config" >Calculadora</button></a>
-        <a href="cotações.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40"alt="Config" >Cotações</button></a>
-        
-        </nav>
-  
-    <nav class="sidebar2">    
-        <a href="sobre.html" target="_self" rel="Next"><img src="../img/info.png" width="40" height="50"alt="perfil"></a>
-    </nav>
-  
-    <button id="themeToggleButton" class="theme-switcher-button">
-      </button>
-  
-    <script src="../JS/theme-switcher.js"></script>
-    <script src="../JS/main.js"></script>
-    <!-- script atualizado: inclui BRL no MAP para preencher o novo card -->
-    <script>
-      const SUPABASE_URL = "https://pltknfhvlcnfcblxcrro.supabase.co";
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsdGtuZmh2bGNuZmNibHhjcnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMjUyMDUsImV4cCI6MjA3MzkwMTIwNX0.MOk0uUxA6ik8-j4BemDIsq63LCZUHqufoOe_oD-QZsE";
+  <a href="index.html" target="_self"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60" alt="Menu"></button></a>
+  <a href="index.html" target="_self"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35" alt="Edu">Educação</button></a>
+  <a href="hub_calculadora.html" target="_self"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35" alt="Calc">Calculadora</button></a>
+  <a href="cotações.html" target="_self"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40" alt="Cot">Cotações</button></a>
+</nav>
 
-      // agora inclui BRL
-      const MAP = {
-        "BRL": { valueId: "BRL_value", timeId: "BRL_time", table: "forex" },
-        "USD": { valueId: "USD_value", timeId: "USD_time", table: "forex" },
-        "EUR": { valueId: "EUR_value", timeId: "EUR_time", table: "forex" },
-        "BTC": { valueId: "BTC_value", timeId: "BTC_time", table: "criptomoedas" },
-        "ETH": { valueId: "ETH_value", timeId: "ETH_time", table: "criptomoedas" },
-        "XRP": { valueId: "XRP_value", timeId: "XRP_time", table: "criptomoedas" }
-      };
 
-      function formatBRL(value) {
-        if (value === null || value === undefined) return "";
-        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value));
-      }
+<button id="themeToggleButton" class="theme-switcher-button"></button>
 
-      async function getList(table, select = "*") {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(table)}?select=${encodeURIComponent(select)}`, {
-          headers: {
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        });
-        if (!res.ok) throw new Error(`Erro ao buscar ${table}: ${res.status} ${res.statusText}`);
-        return res.json();
-      }
+<script src="../JS/theme-switcher.js"></script>
+<script src="../JS/main.js"></script>
 
-      async function getLatestHistory(historyTable, foreignKeyName, foreignId) {
-        const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(historyTable)}?select=valor,data&order=data.desc&limit=1&${encodeURIComponent(foreignKeyName)}=eq.${encodeURIComponent(foreignId)}`;
-        const res = await fetch(url, {
-          headers: {
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        });
-        if (!res.ok) {
-          console.warn(`Falha ao buscar histórico (${historyTable}) para id ${foreignId}: ${res.status}`);
-          return null;
-        }
-        const rows = await res.json();
-        return rows && rows.length ? rows[0] : null;
-      }
+<script>
+  const SUPABASE_URL = "https://pltknfhvlcnfcblxcrro.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsdGtuZmh2bGNuZmNibHhjcnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMjUyMDUsImV4cCI6MjA3MzkwMTIwNX0.MOk0uUxA6ik8-j4BemDIsq63LCZUHqufoOe_oD-QZsE";
 
-      async function fetchAndFill() {
-        try {
-          const [criptos, forexes] = await Promise.all([
-            getList("criptomoedas", "id,simbolo"),
-            getList("forex", "id,nome")
-          ]);
+  const MAP = {
+    "BRL": { valueId: "BRL_value", timeId: "BRL_time" },
+    "USD": { valueId: "USD_value", timeId: "USD_time" },
+    "EUR": { valueId: "EUR_value", timeId: "EUR_time" },
+    "BTC": { valueId: "BTC_value", timeId: "BTC_time" },
+    "ETH": { valueId: "ETH_value", timeId: "ETH_time" },
+    "XRP": { valueId: "XRP_value", timeId: "XRP_time" }
+  };
 
-          // obtém últimas taxas de forex (map: CODE -> { valor, data })
-          const forexLatestEntries = await Promise.all(forexes.map(async f => {
-            const code = String(f.nome).toUpperCase();
-            const hist = await getLatestHistory("historico_forex", "id_forex", f.id);
-            return [code, hist ? { valor: hist.valor, data: hist.data } : { valor: null, data: null }];
-          }));
-          const forexLatest = Object.fromEntries(forexLatestEntries);
+  function formatBRL(value) {
+    if (value === null || value === undefined) return "";
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value));
+  }
 
-          const usdToBrl = forexLatest["BRL"] && forexLatest["BRL"].valor ? Number(forexLatest["BRL"].valor) : null;
-          const usdToBrlTime = forexLatest["BRL"] && forexLatest["BRL"].data ? forexLatest["BRL"].data : null;
-          const usdToEur = forexLatest["EUR"] && forexLatest["EUR"].valor ? Number(forexLatest["EUR"].valor) : null;
-          const usdToJpy = forexLatest["JPY"] && forexLatest["JPY"].valor ? Number(forexLatest["JPY"].valor) : null;
-          const usdToJpyTime = forexLatest["JPY"] && forexLatest["JPY"].data ? forexLatest["JPY"].data : null;
+  async function getList(table, select = "*") {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(table)}?select=${encodeURIComponent(select)}`, {
+      headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${SUPABASE_ANON_KEY}` }
+    });
+    if (!res.ok) throw new Error(`Erro: ${res.status}`);
+    return res.json();
+  }
 
-          // limpa placeholders
-          Object.keys(MAP).forEach(k => {
-            const m = MAP[k];
-            const ve = document.getElementById(m.valueId);
-            const te = document.getElementById(m.timeId);
-            if (ve) ve.textContent = "—";
-            if (te) te.textContent = "";
-          });
+  async function getLatestHistory(historyTable, foreignKeyName, foreignId) {
+    const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(historyTable)}?select=valor,data&order=data.desc&limit=1&${encodeURIComponent(foreignKeyName)}=eq.${encodeURIComponent(foreignId)}`;
+    const res = await fetch(url, {
+      headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${SUPABASE_ANON_KEY}` }
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return rows && rows.length ? rows[0] : null;
+  }
 
-          // preencher USD diretamente a partir da taxa BRL (se disponível)
-          if (usdToBrl !== null) {
-            const usdVe = document.getElementById("USD_value");
-            const usdTe = document.getElementById("USD_time");
-            if (usdVe) usdVe.textContent = formatBRL(usdToBrl);
-            if (usdTe) usdTe.textContent = usdToBrlTime ? new Date(usdToBrlTime).toLocaleString("pt-BR") : "";
-          }
+  async function fetchAndFill() {
+    try {
+      const [criptos, forexes] = await Promise.all([
+        getList("criptomoedas", "id,simbolo"),
+        getList("forex", "id,nome")
+      ]);
 
-          // Preencher card JPY como "1 JPY = X BRL"
-          const jpyVe = document.getElementById("JPY_value");
-          const jpyTe = document.getElementById("JPY_time");
-          if (usdToBrl !== null && usdToJpy !== null && usdToJpy !== 0) {
-            const jpyToBrl = Number(usdToBrl) / Number(usdToJpy); // 1 JPY em BRL
-            if (jpyVe) jpyVe.textContent = formatBRL(jpyToBrl);
-            if (jpyTe) jpyTe.textContent = usdToJpyTime ? new Date(usdToJpyTime).toLocaleString("pt-BR") : "";
-          } else {
-            // fallback: se não houver dados suficientes, mostrar traço ou raw se existir
-            if (jpyVe) {
-              const raw = forexLatest["JPY"] && forexLatest["JPY"].valor ? Number(forexLatest["JPY"].valor).toLocaleString("pt-BR", { maximumFractionDigits: 8 }) : "—";
-              jpyVe.textContent = raw === "—" ? "—" : raw + " (raw)";
-            }
-            if (jpyTe) jpyTe.textContent = forexLatest["JPY"] && forexLatest["JPY"].data ? new Date(forexLatest["JPY"].data).toLocaleString("pt-BR") : "";
-          }
+      const forexLatestEntries = await Promise.all(forexes.map(async f => {
+        const code = String(f.nome).toUpperCase();
+        const hist = await getLatestHistory("historico_forex", "id_forex", f.id);
+        return [code, hist ? { valor: hist.valor, data: hist.data } : { valor: null, data: null }];
+      }));
+      const forexLatest = Object.fromEntries(forexLatestEntries);
 
-          // processa criptomoedas: converte preço (assumido em USD) para BRL usando usdToBrl
-          await Promise.all(criptos.map(async c => {
-            const codigo = (typeof c.simbolo === "string" && c.simbolo.includes("-")) ? c.simbolo.split("-")[0].toUpperCase() : String(c.simbolo).toUpperCase();
-            const mapping = MAP[codigo];
-            if (!mapping) return;
-            const hist = await getLatestHistory("historico_criptos", "id_cripto", c.id);
-            if (!hist) return;
-            const ve = document.getElementById(mapping.valueId);
-            const te = document.getElementById(mapping.timeId);
+      const usdToBrl = forexLatest["BRL"]?.valor ? Number(forexLatest["BRL"].valor) : null;
+      const usdToBrlTime = forexLatest["BRL"]?.data;
+      const usdToJpy = forexLatest["JPY"]?.valor ? Number(forexLatest["JPY"].valor) : null;
+      const usdToJpyTime = forexLatest["JPY"]?.data;
 
-            if (usdToBrl) {
-              const brlValue = Number(hist.valor) * Number(usdToBrl);
-              if (ve) ve.textContent = formatBRL(brlValue);
-            } else {
-              if (ve) ve.textContent = Number(hist.valor).toLocaleString("pt-BR", { maximumFractionDigits: 8 }) + " USD";
-            }
-            if (te) te.textContent = hist.data ? new Date(hist.data).toLocaleString("pt-BR") : "";
-          }));
-
-          // processa forex usando forexLatest (evita consultas duplicadas)
-          forexes.forEach(f => {
-            const codigo = String(f.nome).toUpperCase();
-            const mapping = MAP[codigo];
-            if (!mapping) return;
-            const latest = forexLatest[codigo];
-            if (!latest || latest.valor === null) return;
-            const ve = document.getElementById(mapping.valueId);
-            const te = document.getElementById(mapping.timeId);
-
-            let displayBRL = null;
-            if (codigo === "BRL") {
-              displayBRL = 1;
-            } else if (codigo === "USD") {
-              // já preenchido acima a partir de BRL; se houver registro em forexLatest["USD"] e usdToBrl for null, tentamos usar latest.valor
-              if (usdToBrl) displayBRL = usdToBrl;
-              else if (latest.valor) displayBRL = Number(latest.valor);
-            } else if (codigo === "EUR") {
-              if (usdToBrl && usdToEur) displayBRL = (1 / Number(usdToEur)) * Number(usdToBrl);
-            } else {
-              if (usdToBrl && latest.valor) displayBRL = (1 / Number(latest.valor)) * Number(usdToBrl);
-            }
-
-            if (displayBRL !== null) {
-              if (ve) ve.textContent = formatBRL(displayBRL);
-            } else {
-              if (ve) ve.textContent = Number(latest.valor).toLocaleString("pt-BR", { maximumFractionDigits: 8 }) + " (raw)";
-            }
-            if (te) te.textContent = latest.data ? new Date(latest.data).toLocaleString("pt-BR") : "";
-          });
-
-        } catch (err) {
-          console.error("Erro ao buscar cotações:", err);
-        }
-      }
-
-      fetchAndFill();
-      setInterval(fetchAndFill, 60_000);
-
-      // ===== CONVERSOR DE MOEDAS =====
-      const exchangeRates = {
-        "BRL": 1,
-        "USD": null,
-        "EUR": null,
-        "JPY": null,
-        "BTC": null,
-        "ETH": null,
-        "XRP": null
-      };
-
-      function updateExchangeRates() {
-        // Helper: parse "R$ 45.678,90" corretamente (remove . de milhares, converte , para .)
-        function parseBRLText(text) {
-          if (!text || typeof text !== "string") return null;
-          // remove "R$" e espaços
-          let s = text.replace(/[R$\s]/g, "");
-          // se tem vírgula, assume formato pt-BR: "45.678,90" → remove . e converte ,
-          if (s.includes(",")) {
-            s = s.replace(/\./g, "").replace(/,/g, ".");
-          }
-          // se não tem vírgula, assume já é número com ponto: "45678.90"
-          const n = parseFloat(s);
-          return Number.isFinite(n) ? n : null;
-        }
-
-        // USD em BRL (1 USD = X BRL)
-        const usdValueEl = document.getElementById("USD_value");
-        if (usdValueEl && usdValueEl.textContent !== "—" && usdValueEl.textContent !== "Carregando...") {
-          exchangeRates["USD"] = parseBRLText(usdValueEl.textContent);
-        }
-
-        // EUR em BRL (1 EUR = X BRL)
-        const eurValueEl = document.getElementById("EUR_value");
-        if (eurValueEl && eurValueEl.textContent !== "—" && eurValueEl.textContent !== "Carregando...") {
-          exchangeRates["EUR"] = parseBRLText(eurValueEl.textContent);
-        }
-
-        // JPY em BRL (1 JPY = X BRL)
-        const jpyValueEl = document.getElementById("JPY_value");
-        if (jpyValueEl && jpyValueEl.textContent !== "—" && jpyValueEl.textContent !== "Carregando...") {
-          exchangeRates["JPY"] = parseBRLText(jpyValueEl.textContent);
-        }
-
-        // BTC em BRL (1 BTC = X BRL)
-        const btcValueEl = document.getElementById("BTC_value");
-        if (btcValueEl && btcValueEl.textContent !== "—" && btcValueEl.textContent !== "Carregando...") {
-          exchangeRates["BTC"] = parseBRLText(btcValueEl.textContent);
-        }
-
-        // ETH em BRL (1 ETH = X BRL)
-        const ethValueEl = document.getElementById("ETH_value");
-        if (ethValueEl && ethValueEl.textContent !== "—" && ethValueEl.textContent !== "Carregando...") {
-          exchangeRates["ETH"] = parseBRLText(ethValueEl.textContent);
-        }
-
-        // XRP em BRL (1 XRP = X BRL)
-        const xrpValueEl = document.getElementById("XRP_value");
-        if (xrpValueEl && xrpValueEl.textContent !== "—" && xrpValueEl.textContent !== "Carregando...") {
-          exchangeRates["XRP"] = parseBRLText(xrpValueEl.textContent);
-        }
-      }
-
-      function convertCurrency() {
-        const inputs = document.querySelectorAll("#valor");
-        const selects = document.querySelectorAll("#moeda");
-
-        if (inputs.length < 2 || selects.length < 2) return;
-
-        const fromInput = inputs[0];
-        const toInput = inputs[1];
-        const fromCurrency = selects[0].value;
-        const toCurrency = selects[1].value;
-
-        // parse com suporte a mais casas decimais
-        const amountStr = String(fromInput.value).trim().replace(/\./g, "").replace(/,/g, ".");
-        const amount = parseFloat(amountStr) || 0;
-
-        if (amount === 0) {
-          toInput.value = "";
-          return;
-        }
-
-        // Verifica se ambas as taxas estão disponíveis
-        if (!exchangeRates[fromCurrency] || !exchangeRates[toCurrency]) {
-          toInput.value = "—";
-          return;
-        }
-
-        // Converte para BRL primeiro, depois para a moeda final
-        const amountInBrl = amount * exchangeRates[fromCurrency];
-        const convertedAmount = amountInBrl / exchangeRates[toCurrency];
-        
-        // Se envolver cripto, usa até 8 casas decimais; senão, 2
-        const isCrypto = ["BTC", "ETH", "XRP"].includes(toCurrency);
-        const maxDecimals = isCrypto ? 8 : 2;
-        
-        toInput.value = convertedAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: maxDecimals });
-      }
-
-      function formatFirstInput() {
-        const inputs = document.querySelectorAll("#valor");
-        if (inputs.length < 1) return;
-
-        const fromInput = inputs[0];
-        const fromCurrency = document.querySelectorAll("#moeda")[0].value;
-        
-        // parse com suporte a mais casas decimais
-        const valueStr = String(fromInput.value).trim().replace(/\./g, "").replace(/,/g, ".");
-        let value = parseFloat(valueStr) || 0;
-
-        // Se envolve cripto, permite até 8 casas decimais; senão, 2
-        const isCrypto = ["BTC", "ETH", "XRP"].includes(fromCurrency);
-        const maxDecimals = isCrypto ? 8 : 2;
-        
-        // Formata mantendo casas decimais apropriadas
-        fromInput.value = value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: maxDecimals });
-      }
-
-      // Atualizar taxas quando os valores forem carregados
-      setTimeout(updateExchangeRates, 1000);
-      setInterval(updateExchangeRates, 60_000);
-
-      // Event listeners para o conversor
-      document.addEventListener("DOMContentLoaded", () => {
-        const inputs = document.querySelectorAll("#valor");
-        const selects = document.querySelectorAll("#moeda");
-
-        inputs.forEach((input, index) => {
-          if (index === 0) {
-            // Primeira caixa: formata com 2 casas decimais e converte
-            input.addEventListener("input", () => {
-              convertCurrency();
-            });
-            input.addEventListener("blur", formatFirstInput);
-          } else {
-            // Segunda caixa: apenas evita edição manual
-            input.addEventListener("input", convertCurrency);
-          }
-        });
-
-        selects.forEach(select => {
-          select.addEventListener("change", convertCurrency);
-        });
+      Object.keys(MAP).forEach(k => {
+        const m = MAP[k];
+        const ve = document.getElementById(m.valueId);
+        const te = document.getElementById(m.timeId);
+        if (ve) ve.textContent = "—";
+        if (te) te.textContent = "";
       });
-    </script>
-    </body>
+
+      if (usdToBrl !== null) {
+        const usdVe = document.getElementById("USD_value");
+        const usdTe = document.getElementById("USD_time");
+        if (usdVe) usdVe.textContent = formatBRL(usdToBrl);
+        if (usdTe) usdTe.textContent = usdToBrlTime ? new Date(usdToBrlTime).toLocaleString("pt-BR") : "";
+      }
+
+      const jpyVe = document.getElementById("JPY_value");
+      const jpyTe = document.getElementById("JPY_time");
+      if (usdToBrl !== null && usdToJpy !== null && usdToJpy !== 0) {
+        const jpyToBrl = Number(usdToBrl) / Number(usdToJpy);
+        if (jpyVe) jpyVe.textContent = formatBRL(jpyToBrl);
+        if (jpyTe) jpyTe.textContent = usdToJpyTime ? new Date(usdToJpyTime).toLocaleString("pt-BR") : "";
+      }
+
+      await Promise.all(criptos.map(async c => {
+        const codigo = (typeof c.simbolo === "string" && c.simbolo.includes("-")) ? c.simbolo.split("-")[0].toUpperCase() : String(c.simbolo).toUpperCase();
+        const mapping = MAP[codigo];
+        if (!mapping) return;
+        const hist = await getLatestHistory("historico_criptos", "id_cripto", c.id);
+        if (!hist) return;
+        const ve = document.getElementById(mapping.valueId);
+        const te = document.getElementById(mapping.timeId);
+        if (usdToBrl) {
+          const brlValue = Number(hist.valor) * Number(usdToBrl);
+          if (ve) ve.textContent = formatBRL(brlValue);
+        } else {
+          if (ve) ve.textContent = Number(hist.valor).toLocaleString("pt-BR", { maximumFractionDigits: 8 }) + " USD";
+        }
+        if (te) te.textContent = hist.data ? new Date(hist.data).toLocaleString("pt-BR") : "";
+      }));
+
+      const eurData = forexLatest["EUR"];
+      if (eurData && eurData.valor && usdToBrl) {
+         const usdToEur = eurData.valor ? Number(eurData.valor) : null;
+         if (usdToEur) {
+             const eurVal = (1 / usdToEur) * usdToBrl;
+             const eurVe = document.getElementById("EUR_value");
+             const eurTe = document.getElementById("EUR_time");
+             if(eurVe) eurVe.textContent = formatBRL(eurVal);
+             if(eurTe) eurTe.textContent = eurData.data ? new Date(eurData.data).toLocaleString("pt-BR") : "";
+         }
+      }
+    } catch (err) { console.error(err); }
+  }
+
+  fetchAndFill();
+  setInterval(fetchAndFill, 60000);
+
+  const exchangeRates = { "BRL": 1, "USD": null, "EUR": null, "JPY": null, "BTC": null, "ETH": null, "XRP": null };
+
+  function updateExchangeRates() {
+    function parseVal(id) {
+       const el = document.getElementById(id);
+       if(!el || el.textContent.includes("Carregando") || el.textContent === "—") return null;
+       let s = el.textContent.replace(/[R$\s]/g, "");
+       if(s.includes(",")) s = s.replace(/\./g, "").replace(/,/g, ".");
+       const n = parseFloat(s);
+       return Number.isFinite(n) ? n : null;
+    }
+    exchangeRates["USD"] = parseVal("USD_value");
+    exchangeRates["EUR"] = parseVal("EUR_value");
+    exchangeRates["JPY"] = parseVal("JPY_value");
+    exchangeRates["BTC"] = parseVal("BTC_value");
+    exchangeRates["ETH"] = parseVal("ETH_value");
+    exchangeRates["XRP"] = parseVal("XRP_value");
+  }
+
+  function convertCurrency() {
+    const inputs = document.querySelectorAll("#valor");
+    const selects = document.querySelectorAll("#moeda");
+    if(inputs.length < 2) return;
+    
+    const fromVal = parseFloat(inputs[0].value.replace(/\./g, "").replace(/,/g, ".")) || 0;
+    const fromCur = selects[0].value;
+    const toCur = selects[1].value;
+
+    if(fromVal === 0) { inputs[1].value = ""; return; }
+    if(!exchangeRates[fromCur] || !exchangeRates[toCur]) { inputs[1].value = "—"; return; }
+
+    const valInBRL = fromVal * exchangeRates[fromCur]; 
+    const finalVal = valInBRL / exchangeRates[toCur];
+    const isCrypto = ["BTC","ETH","XRP"].includes(toCur);
+    inputs[1].value = finalVal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: isCrypto?8:2 });
+  }
+
+  setTimeout(updateExchangeRates, 2000);
+  setInterval(updateExchangeRates, 5000);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const inputs = document.querySelectorAll("#valor");
+    const selects = document.querySelectorAll("#moeda");
+    inputs[0].addEventListener("input", convertCurrency);
+    inputs[0].addEventListener("blur", function() {
+        const v = parseFloat(this.value.replace(/\./g, "").replace(/,/g, ".")) || 0;
+        this.value = v.toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:8});
+    });
+    selects.forEach(s => s.addEventListener("change", () => {
+        convertCurrency();
+        updateExchangeRates();
+    }));
+  });
+</script>
+
+</body>
 </html>
