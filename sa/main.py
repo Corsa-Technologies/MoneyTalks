@@ -37,7 +37,7 @@ URL_BCB_CDI = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.12/dados/ultimos/1?
 URL_BCB_IPCA = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.13522/dados/ultimos/1?formato=json"
 
 # pares de cripto que queremos da okx (em formato usdt)
-PARES_CRIPTO = ["BTC-USDT", "ETH-USDT", "SOL-USDT"]
+PARES_CRIPTO = ["BTC-USDT", "ETH-USDT", "SOL-USDT"]  # pares de cripto monitorados (podem ser expandidos futuramente)
 
 
 # 1. lógica das cotações (funções de busca)
@@ -117,7 +117,7 @@ def get_cotacoes_atuais():
 
     # 2. buscar cripto
     cripto_data = {}
-    for par in PARES_CRIPTO:
+    for par in PARES_CRIPTO:  # iteramos cada par definido acima
         nome_moeda = par.split('-')[0]
         preco_usdt = buscar_preco_cripto_okx(par)
         
@@ -224,41 +224,41 @@ def post_simular_investimento(dados_input: SimulacaoInput):
     total_dias = total_meses * (365.25 / 12) 
     
     # tarefa 3.2: buscar taxas externas e definir taxa efetiva
-    taxa_cdi_anual = 0.0
-    taxa_ipca_anual = 0.0
-    taxa_efetiva_anual = 0.0
+    taxa_cdi_anual = 0.0  # armazenará a taxa CDI anual quando aplicável
+    taxa_ipca_anual = 0.0  # armazenará a inflação anual quando aplicável
+    taxa_efetiva_anual = 0.0  # taxa efetiva resultante usada nos cálculos
 
     # rentabilidade_bruta (ex: 110%) vira rentabilidade_decimal (ex: 1.10)
     # ou (ex: 10%) vira (ex: 0.10)
     rentabilidade_decimal = dados_input.rentabilidade_bruta / 100
 
-    if dados_input.tipo_rentabilidade.upper() == "POS":
+    if dados_input.tipo_rentabilidade.upper() == "POS":  # pós-fixado (ex: % do CDI)
         taxa_cdi_anual = buscar_taxa_cdi_anual()
         # ex: cdi (10.5%) * 110% = 0.105 * 1.10
         taxa_efetiva_anual = taxa_cdi_anual * rentabilidade_decimal
     
-    elif dados_input.tipo_rentabilidade.upper() == "IPCA":
+    elif dados_input.tipo_rentabilidade.upper() == "IPCA":  # híbrido (inflação + taxa extra)
         taxa_ipca_anual = buscar_taxa_ipca_anual()
         # juros compostos (1 + inflação) * (1 + taxa_extra) - 1
         # ex: (1 + 0.045) * (1 + 0.06) - 1
         taxa_efetiva_anual = (1 + taxa_ipca_anual) * (1 + rentabilidade_decimal) - 1
     
-    else: # "pre"
+    else: # "pre" (taxa totalmente definida pelo usuário)
         # ex: 10%
         taxa_efetiva_anual = rentabilidade_decimal
 
     # tarefa 3.3: converter taxa anual para mensal
     # fórmula correta de juros compostos: (1 + taxa_anual) ** (1/12) - 1
-    taxa_efetiva_mensal = (1 + taxa_efetiva_anual) ** (1/12) - 1
+    taxa_efetiva_mensal = (1 + taxa_efetiva_anual) ** (1/12) - 1  # conversão correta para base mensal (capitalização composta)
 
     # tarefa 3.4: calcular juros compostos (o "cálculo principal")
-    montante_atual = dados_input.valor_inicial
-    grafico_evolucao = []
+    montante_atual = dados_input.valor_inicial  # começa com o valor inicial
+    grafico_evolucao = []  # lista de pontos mês a mês para o gráfico
     # adiciona o ponto inicial (mês 0)
     grafico_evolucao.append(PontoGrafico(mes=0, valor=round(montante_atual, 2)))
 
     # loop de 1 até o último mês
-    for mes in range(1, total_meses + 1):
+    for mes in range(1, total_meses + 1):  # simula mês a mês aplicando juros e aportes
     
         # esta é a ordem correta que corrigimos
         # primeiro, aplica os juros sobre o saldo do mês anterior
@@ -280,17 +280,18 @@ def post_simular_investimento(dados_input: SimulacaoInput):
     aliquota_ir = 0.0
     
     # lci/lca são isentas de imposto
-    investimento_tributavel = dados_input.tipo_investimento.upper() in ["CDB", "TESOURO"]
+    investimento_tributavel = dados_input.tipo_investimento.upper() in ["CDB", "TESOURO"]  # lci/lca são isentos; demais podem ter IR
 
     # só calcula imposto se for tributável e se tiver tido lucro
     if investimento_tributavel and lucro_bruto > 0:
-        if total_dias <= 180:
+        # definição da alíquota conforme tabela regressiva do IR
+        if total_dias <= 180:  # até 6 meses
             aliquota_ir = 0.225 # 22.5%
         elif total_dias <= 360:
             aliquota_ir = 0.200 # 20.0%
         elif total_dias <= 720:
             aliquota_ir = 0.175 # 17.5%
-        else: # acima de 720 dias
+        else: # acima de 720 dias (mais de 2 anos)
             aliquota_ir = 0.150 # 15.0%
             
         imposto_a_pagar = lucro_bruto * aliquota_ir
@@ -300,7 +301,7 @@ def post_simular_investimento(dados_input: SimulacaoInput):
     juros_liquido = lucro_bruto - imposto_a_pagar
 
     # criamos o objeto de resposta (validado pelo pydantic)
-    resposta = SimulacaoOutput(
+    resposta = SimulacaoOutput(  # empacota todos os resultados finais validados pelo Pydantic
         valor_total_investido=round(valor_total_investido, 2),
         montante_bruto=round(montante_bruto, 2),
         total_juros_bruto=round(lucro_bruto, 2),
