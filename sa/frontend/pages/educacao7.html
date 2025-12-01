@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juros Compostos — MoneyTalks</title>
+  <link rel="shortcut icon" href="../dinheiro.png" type="image/x-icon">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Layout Base */
+    .article-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3% 2%;
+      text-align: justify;
+    }
+
+    .article-content h2 {
+      text-align: center;
+      margin-top: 4%;
+      margin-bottom: 2%;
+      font-size: 2.1em;
+      border-bottom: 3px solid var(--accent-color, #4CAF50);
+      padding-bottom: 1%;
+    }
+
+    .article-content h3 {
+      text-align: center;
+      margin-top: 3%;
+      margin-bottom: 1.5%;
+      font-size: 1.5em;
+      color: var(--accent-color, #4CAF50);
+    }
+
+    .article-content p {
+      line-height: 1.8;
+      margin-bottom: 1.5%;
+      font-size: 1.15em;
+    }
+
+    .article-content ul {
+      max-width: 900px;
+      margin: 2.5% auto;
+      padding-left: 3%;
+      line-height: 1.8;
+    }
+
+    .article-content li {
+      margin-bottom: 1%;
+      font-size: 1.15em;
+      color: #fff;
+    }
+
+    .light-theme .article-content li {
+      color: #222;
+    }
+
+    /* --- ESTILO DA CAIXA VERDE GERAL --- */
+    .highlight-box {
+      background-color: rgba(76, 175, 80, 0.15);
+      border-left: 4px solid var(--accent-color, #4CAF50);
+      padding: 3%;
+      margin: 3% auto;
+      max-width: 1000px;
+      border-radius: 8px;
+      color: #fff;
+      display: block;
+    }
+
+    /* --- ESTILO: SISTEMA DE CARDS --- */
+    .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .card-juros {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 20px;
+        flex: 1 1 300px; /* Largura mínima de 300px */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .light-theme .card-juros {
+        background-color: rgba(255, 255, 255, 0.6);
+        color: #222;
+        border: 1px solid #ddd;
+    }
+
+    .card-icon {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .card-title {
+        font-weight: bold;
+        font-size: 1.3em;
+        color: var(--accent-color, #4CAF50);
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .card-desc {
+        font-size: 0.95em;
+        text-align: center;
+        margin-bottom: 20px;
+        font-style: italic;
+        min-height: 40px;
+    }
+
+    .math-list {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+        font-family: monospace;
+        background-color: rgba(0,0,0,0.1);
+        padding: 15px;
+        border-radius: 5px;
+    }
+    
+    .light-theme .math-list {
+        background-color: rgba(0,0,0,0.05);
+    }
+
+    /* AQUI ESTÁ A ALTERAÇÃO: Aumentei a fonte das linhas */
+    .math-list li {
+        margin-bottom: 8px;
+        font-size: 1.25em; /* Aumentado para ficar mais legível */
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* AQUI ESTÁ A ALTERAÇÃO: Aumentei a fonte do total */
+    .math-total {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 2px dashed var(--accent-color, #4CAF50);
+        font-weight: bold;
+        font-size: 1.4em; /* Bem grande para destaque */
+    }
+
+    .light-theme .highlight-box {
+      color: #222;
+    }
+
+    .article-content strong {
+      color: var(--accent-color, #4CAF50);
+    }
+
+    .article-content li strong {
+      color: var(--accent-color, #4CAF50);
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 1.05em;
+      margin-top: 5%;
+      padding-top: 2%;
+      border-top: 1px solid rgba(128, 128, 128, 0.3);
+      color: rgba(128, 128, 128, 0.8);
+    }
+  </style>
+  <script>(()=>{try{document.documentElement.classList.toggle('light-theme',+localStorage.getItem('modo')===1)}catch(e){}})();</script>
+</head>
+<body>
+  
+  <div class="div2"><h1>Juros Compostos: A 8ª Maravilha do Mundo</h1></div>
+  
+  <div class="div7">
+    <div class="article-wrapper">
+      <article class="article-content">
+        <p>Dizem que Albert Einstein certa vez chamou os juros compostos de "a oitava maravilha do mundo". Se ele disse isso ou não, pouco importa. O fato é que esse conceito é a força mais poderosa para multiplicar o seu dinheiro ao longo do tempo.</p>
+        
+        <p>Entender a diferença entre juros simples e compostos é o que separa quem trabalha pelo dinheiro de quem faz o dinheiro trabalhar para si.</p>
+
+        <h2>O Que São Juros Compostos?</h2>
+        <p>Popularmente conhecidos como <strong>"juros sobre juros"</strong>, os juros compostos funcionam como uma bola de neve. Os rendimentos que você ganha este mês são somados ao seu capital inicial, e no mês seguinte, você ganhará juros sobre esse novo valor total.</p>
+        <div class="card-artigo"> 
+    <img src="../img/juroscompostos1.png" alt="Descrição" class="img-responsiva">
+    </div>
+        <p>Ou seja: o dinheiro que você ganhou "de graça" (rendimento) passa a gerar novos filhos (mais rendimento) para você.</p>
+
+        <h3>A Diferença na Prática</h3>
+        <p>Vamos imaginar que você investiu <strong>R$ 1.000,00</strong> a uma taxa de <strong>10% ao ano</strong>. Veja o que acontece após 3 anos:</p>
+
+        <div class="highlight-box">
+          <div style="text-align: center; font-weight: bold; font-size: 1.4em; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px;">
+            Duelo de Juros
+          </div>
+
+          <div class="cards-container">
+            
+            <div class="card-juros">
+                <div class="card-icon">🐢</div>
+                <div class="card-title">Juros Simples</div>
+                <div class="card-desc">
+                    O ganho é sempre sobre os R$ 1.000 iniciais. O valor não cresce.
+                </div>
+                <ul class="math-list">
+                    <li><span>Ano 1:</span> <span>+ R$ 100</span></li>
+                    <li><span>Ano 2:</span> <span>+ R$ 100</span></li>
+                    <li><span>Ano 3:</span> <span>+ R$ 100</span></li>
+                    <li class="math-total"><span>Total:</span> <span>R$ 1.300</span></li>
+                </ul>
+            </div>
+
+            <div class="card-juros">
+                <div class="card-icon">🚀</div>
+                <div class="card-title">Juros Compostos</div>
+                <div class="card-desc">
+                    O ganho incide sobre o acumulado. Vira uma bola de neve.
+                </div>
+                <ul class="math-list">
+                    <li><span>Ano 1:</span> <span>+ R$ 100</span></li>
+                    <li><span>Ano 2:</span> <span>+ R$ 110</span></li>
+                    <li><span>Ano 3:</span> <span>+ R$ 121</span></li>
+                    <li class="math-total"><span>Total:</span> <span>R$ 1.331</span></li>
+                </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <p>Parece pouco? A diferença de R$ 31,00 pode parecer pequena em 3 anos. Mas em 30 anos, essa diferença se torna exponencial, transformando milhares em milhões.</p>
+
+        <h2>O Fator Tempo</h2>
+        <p>Nos juros compostos, o <strong>Tempo</strong> é mais importante do que a quantidade de dinheiro. Quanto mais cedo você começar, maior será a curva de crescimento.</p>
+        
+        <p>A fórmula matemática explica isso: <code>M = C (1 + i)<sup>t</sup></code>. Perceba que o tempo (<strong>t</strong>) é uma potência. Isso significa que dobrar o tempo não dobra o resultado — ele multiplica o resultado de forma explosiva.</p>
+
+        <h2>Resumo</h2>
+        <ul>
+            <li>Juros compostos são juros sobre juros.</li>
+            <li>No curto prazo a diferença é pequena, mas no longo prazo é brutal.</li>
+            <li>O tempo é o melhor amigo do investidor.</li>
+            <li>Comece cedo, mesmo com pouco dinheiro.</li>
+        </ul>
+
+        <div class="disclaimer">
+          <em>Este artigo tem caráter educativo e não constitui recomendação de investimento.</em>
+        </div>
+      </article>
+    </div>
+  </div>
+  
+  <nav class="sidebar">
+    <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Logo Ab.png" width="60" height="60" alt="Menu"></button></a>
+    <a href="index.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Enviar Extrato.png" width="46" height="35" alt="Config">Educação</button></a>
+    <a href="hub_calculadora.html" target="_self" rel="Next"><button class="button_3"><img src="../img/calculadora.png" width="39" height="35" alt="Config">Calculadora</button></a>
+    <a href="cotações.html" target="_self" rel="Next"><button class="button_3"><img src="../img/Cotaçoes.png" width="50" height="40" alt="Config">Cotações</button></a>
+  </nav>
+  
+
+  <button id="themeToggleButton" class="theme-switcher-button"></button>
+
+  <script src="../JS/theme-switcher.js"></script>
+  <script src="../JS/main.js"></script>
+</body>
+</html>

@@ -4,7 +4,12 @@ import os
 import logging
 from contextlib import contextmanager
 import pytest
-from airflow.models import DagBag
+
+# Tenta importar Airflow; se não disponível, pula este módulo inteiro.
+try:
+    from airflow.models import DagBag  # type: ignore
+except ImportError:  # pragma: no cover
+    pytest.skip("Airflow não instalado - pulando testes de DAG", allow_module_level=True)
 
 
 @contextmanager
