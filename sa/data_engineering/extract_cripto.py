@@ -20,7 +20,7 @@ class Process_cripto:
         self.base_url = "https://www.okx.com/api/v5/market/ticker"
         self.supabase_url = "https://pltknfhvlcnfcblxcrro.supabase.co/rest/v1"
         self.supabase_key = (
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsdGtuZmh2bGNuZmNibHhjcnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMjUyMDUsImV4cCI6MjA3MzkwMTIwNX0.MOk0uUxA6ik8-j4BemDIsq63LCZUHqufoOe_oD-QZsE"
+            "chave"
         )
 
     def get_criptos(self):
@@ -137,3 +137,4 @@ if __name__ == "__main__":
         print("Extração de cripto finalizada.")
     except Exception as e:
         print("Erro na execução:", e)
+
